@@ -1,0 +1,194 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.js"></script>
+
+<body>
+    <table id="prueba"></table>
+</body>
+
+<style>
+    th.sorting {
+        color: #FF8800;
+        text-decoration: underline;
+        font-size: 20px;
+        font-style: italic;
+        font-weight: 700;
+    }
+
+    table.dataTable thead th {
+        border-bottom: 0;
+    }
+
+    table.dataTable.no-footer {
+        border-bottom: 0;
+    }
+
+    figure {
+        margin: 0px;
+    }
+</style>
+<script>
+    let start = 1;
+    let infoProyectosCompletados = []
+    let infoInicio = {}
+    let columnsData = []
+
+
+    chartData = {
+        chart: {
+            type: 'bar',
+            backgroundColor: 'transparent',
+            margin: 1,
+            height: 35,
+            width: 300
+        },
+        title: {
+            text: null
+        },
+        plotOptions: {
+            bar: {
+                maxPointWidth: 500,
+                dataLabels: {
+                    enabled: true,
+                    format: '{y}%'
+                },
+            }
+        },
+        colors: ["purple"],
+        xAxis: { visible: false },
+        yAxis: { visible: false, max: 100 },
+        tooltip: false,
+        credits: false,
+        exporting: false,
+        legend: false,
+        series: [{
+            data: []
+        }]
+    }
+
+
+    let inicio = () => {
+        console.log("inicio");
+        infoProyectosCompletados.forEach(element => {
+            if (!infoInicio.hasOwnProperty(element.Project.Name)) {
+                infoInicio[element.Project.Name] = {}
+                infoInicio[element.Project.Name].color = element.Project.c_ColorInformes
+                infoInicio[element.Project.Name].completados = 0
+                infoInicio[element.Project.Name].incompletos = 0
+            }
+
+            if (element.State && "Done".localeCompare(element.State.Name) == 0 && element.PercentDoneByStoryPlanEstimate == 1) {
+                infoInicio[element.Project.Name].completados = infoInicio[element.Project.Name].completados + 1
+            } else {
+                infoInicio[element.Project.Name].incompletos = infoInicio[element.Project.Name].incompletos + 1
+            }
+        })
+        console.log(infoInicio);
+    }
+
+    let crearTabla = () => {
+        console.log("crear tabla");
+        i = 0
+        for (var element in infoInicio) {
+            columnsData.push([
+                `<span style = color:${infoInicio[element].color}>${element}</span>`,
+                `<span style=display:none>${infoInicio[element].incompletos}</span><figure class="highcharts-figure"><div id="chart1${i}"></div>`,
+                `<span style=display:none>${infoInicio[element].incompletos}</span><figure class="highcharts-figure"><div id="chart2${i}"></div>`,
+                `<span style=display:none>${infoInicio[element].incompletos}</span><figure class="highcharts-figure"><div id="chart3${i}"></div>`,
+                `<span style=display:none>${infoInicio[element].incompletos}</span><figure class="highcharts-figure"><div id="chart4${i}"></div>`,
+                `<span style=display:none>${infoInicio[element].incompletos}</span><figure class="highcharts-figure"><div id="chart5${i}"></div>`
+            ])
+            i++
+        }
+
+        $('#prueba').DataTable({
+            data: columnsData,
+            paging: false,
+            info: false,
+            searching: false,
+            columns: [{ title: "Equipo" },
+            { title: "Proyectos completados" },
+            { title: "Calidad de proyectos" },
+            { title: "Historias de Usuario vs Defectos" },
+            { title: "ETC vs Actuals" },
+            { title: "Desvíos en fechas" }]
+        });
+    }
+
+
+
+
+    let llenarGraficos = () => {
+        console.log("llenar grafico");
+        i = 0
+
+        for (var key in infoInicio) {
+            porcentaje = Math.floor((infoInicio[key].completados * 100) / (infoInicio[key].completados + infoInicio[key].incompletos))
+            console.log(porcentaje);
+            if (porcentaje >= 50) {
+                chartData.colors[0] = "#00B050"
+            } else {
+                chartData.colors[0] = "#FF776D"
+            }
+
+            chartData.series[0].data[0] = porcentaje
+            Highcharts.chart(`chart1${i}`, chartData);
+
+
+
+
+
+            i++
+        }
+
+        /*
+        infoInicio.forEach(element => {
+            console.log(element);
+            chartData.colors[0] = element.color
+
+            chartData.series[0].data[0] = element.data1
+            Highcharts.chart(`chart1${i}`, chartData);
+            
+            chartData.series[0].data[0] = element[0].data2
+            Highcharts.chart(`chart2${i}`, chartData);
+
+            chartData.series[0].data[0] = element[0].data3
+            Highcharts.chart(`chart3${i}`, chartData);
+
+            chartData.series[0].data[0] = element[0].data4
+            Highcharts.chart(`chart4${i}`, chartData);
+
+            chartData.series[0].data[0] = element[0].data5
+            Highcharts.chart(`chart5${i}`, chartData);
+            
+            
+        });
+        */
+    }
+
+
+    let cargarDatos = () => {
+        fetch(`https://eu1.rallydev.com/slm/webservice/v2.0/portfolioitem/initiative?fetch=state,percentdonebystoryplanestimate,project,name,c_colorinformes&pagesize=2000&start=${start}`, { headers: { "zsessionid": '_LBg2ffFxS6SDSxxZI1qgLR5NFsFDkmptXXPt8RHOn0' } })
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.QueryResult.TotalResultCount > (1999 + start)) {
+                    start += 2000
+                    infoProyectosCompletados = infoProyectosCompletados.concat(data.QueryResult.Results)
+                    cargarDatos()
+                } else {
+                    start = 1
+                    infoProyectosCompletados = infoProyectosCompletados.concat(data.QueryResult.Results)
+                    inicio()
+                    crearTabla()
+                    llenarGraficos()
+                }
+
+            })
+    }
+    cargarDatos()
+
+</script>
