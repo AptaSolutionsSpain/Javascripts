@@ -1,3 +1,5 @@
+registrarTrackingUsoInformes();
+
 function registrarTrackingUsoInformes(){
 	// Se define el objeto con el cual mas tarde se asignarán los registros según los informes consultados por el usuario en la página visitada
 	var informesConsultados = [];
