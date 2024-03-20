@@ -33,14 +33,14 @@ function registrarTrackingUsoInformes(){
 				var usuario = window.parent.userFirstName + " " + window.parent.userLastName + " (" + window.parent.userName + ")";
 				var fechaActual = new Date();
 				var fechaFormateadaActual = 
-					fechaActual.getFullYear() + "/"
+					fechaActual.getFullYear() + "-"
 					+ padNumber(fechaActual.getMonth() + 1)
-					+ "/" + padNumber(fechaActual.getDate())
-					+ " " + padNumber(fechaActual.getHours())
+					+ "-" + padNumber(fechaActual.getDate())
+					+ "T" + padNumber(fechaActual.getHours())
 					+ ":" + padNumber(fechaActual.getMinutes())
 					+ ":" + padNumber(fechaActual.getSeconds());
-				
-				// Obtener APPs mostradas en página actual
+
+					// Obtener APPs mostradas en página actual
 				var APPs = window.parent.document.getElementsByClassName("chr-Dashboard-col")[0];
 				for(var a = 0; a < APPs.childElementCount; a++){ var APP=APPs.childNodes[a]; var nombreAPP=APP.getElementsByClassName("smb-HeaderGroup-title" ); if(nombreAPP && nombreAPP.length> 0){
 						nombreAPP = nombreAPP[0].innerHTML;
