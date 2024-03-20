@@ -45,13 +45,13 @@ function registrarTrackingUsoInformes(){
 				for(var a = 0; a < APPs.childElementCount; a++){ var APP=APPs.childNodes[a]; var nombreAPP=APP.getElementsByClassName("smb-HeaderGroup-title" ); if(nombreAPP && nombreAPP.length> 0){
 						nombreAPP = nombreAPP[0].innerHTML;
 						informesConsultados.push({
-							'usuario' : usuario
-							, 'fecha' : fechaFormateadaActual
-							, 'equipo' : nombreEquipo
-							, 'navegacion' : navegacion
-							, 'scopeUp' : flagScopeUp
-							, 'scopeDown' : flagScopeDown
-							, 'APP' : nombreAPP
+							'c_usuario' : usuario
+							, 'c_fecha_consulta' : fechaFormateadaActual
+							, 'c_equipo' : nombreEquipo
+							, 'c_navegacion' : navegacion
+							, 'c_scope_up' : flagScopeUp
+							, 'c_scope_down' : flagScopeDown
+							, 'c_informe_cm' : nombreAPP
 						});
 					}
 				}
