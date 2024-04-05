@@ -16,7 +16,8 @@ function registrarTrackingUsoInformes() {
 	// Se consulta el Workspace ( de momento solo actua si es PRE)
 	var workspace = window.parent.RALLY.context.workspaceOid;
 	/* Id pro 74012321969*/
-	if(workspace == 73853665581){
+	/* Id pre 73853665581*/
+	if(workspace == 74012321969){
 		// Se define el objeto con el cual mas tarde se asignarán los registros según los informes consultados por el usuario en la página visitada
 		var informesConsultados = [];
 
