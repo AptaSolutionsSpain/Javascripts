@@ -59,11 +59,10 @@ function registrarTrackingUsoInformes() {
 					if (nombreAPP && nombreAPP.length > 0) {
 						nombreAPP = nombreAPP[0].innerText;
 						nombreAPP = nombreAPP.charAt(0).toUpperCase() + nombreAPP.slice(1).toLowerCase();
-						// Selecciona todos los elementos 'span'
+
 						let spans = APP.querySelectorAll('span');
 
-						// Filtra los elementos que contengan el texto exacto 'Core (custom)'
-						let filteredSpans = Array.from(spans).filter(span => span.textContent === 'Subscription');
+						let filteredSpans = Array.from(spans).filter(span => span.textContent === 'Subscription' || span.textContent === 'Core (custom)');
 
 						if (filteredSpans.length > 0) {
 							informesConsultados.push({
