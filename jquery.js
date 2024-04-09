@@ -15,9 +15,13 @@ registrarTrackingUsoInformes();
 function registrarTrackingUsoInformes() {
 	// Se consulta el Workspace ( de momento solo actua si es PRE)
 	var workspace = window.parent.RALLY.context.workspaceOid;
+	/* Id hito pre 75650599817 */
+	/* Id hito pro 75862288653 */
+	let idHito = 75650599817
+
 	/* Id pro 74012321969*/
 	/* Id pre 73853665581*/
-	if(workspace == 73853665581){
+	if (workspace == 73853665581) {
 		// Se define el objeto con el cual mas tarde se asignarán los registros según los informes consultados por el usuario en la página visitada
 		var informesConsultados = [];
 
@@ -50,21 +54,28 @@ function registrarTrackingUsoInformes() {
 				// Obtener APPs mostradas en página actual
 				var APPs = window.parent.document.getElementsByClassName("chr-Dashboard-col")[0];
 				for (var a = 0; a < APPs.childElementCount; a++) {
-					var APP = APPs.childNodes[a]; 
-					var nombreAPP = APP.getElementsByClassName("smb-HeaderGroup-title"); 
+					var APP = APPs.childNodes[a];
+					var nombreAPP = APP.getElementsByClassName("smb-HeaderGroup-title");
 					if (nombreAPP && nombreAPP.length > 0) {
 						nombreAPP = nombreAPP[0].innerText;
 						nombreAPP = nombreAPP.charAt(0).toUpperCase() + nombreAPP.slice(1).toLowerCase();
+						// Selecciona todos los elementos 'span'
+						let spans = APP.querySelectorAll('span');
 
-						informesConsultados.push({
-							'c_usuario': usuario
-							, 'c_fecha_consulta': fechaFormateadaActual
-							, 'c_equipo': nombreEquipo
-							, 'c_navegacion': navegacion
-							, 'c_scope_up': flagScopeUp
-							, 'c_scope_down': flagScopeDown
-							, 'c_informe_cm': nombreAPP
-						});
+						// Filtra los elementos que contengan el texto exacto 'Core (custom)'
+						let filteredSpans = Array.from(spans).filter(span => span.textContent === 'Subscription');
+
+						if (filteredSpans.length > 0) {
+							informesConsultados.push({
+								'c_usuario': usuario
+								, 'c_fecha_consulta': fechaFormateadaActual
+								, 'c_equipo': nombreEquipo
+								, 'c_navegacion': navegacion
+								, 'c_scope_up': flagScopeUp
+								, 'c_scope_down': flagScopeDown
+								, 'c_informe_cm': nombreAPP
+							});
+						}
 					}
 				}
 			}
@@ -75,7 +86,7 @@ function registrarTrackingUsoInformes() {
 			// Se obtiene el API Token
 			const apiToken = window.parent.RALLY.getSecurityToken();
 			// Se consulta el valor actual del campo para añadirlo al principio de la cadena a escribir en el campo Tracking Informes
-			const urlHito = location.origin + '/slm/webservice/v2.0/milestone/75650599817?fetch=c_TrackingInformes';
+			const urlHito = location.origin + '/slm/webservice/v2.0/milestone/' + idHito + '?fetch=c_TrackingInformes';
 
 			fetch(urlHito, {
 				method: 'GET', // Método HTTP utilizado para la solicitud
@@ -101,7 +112,7 @@ function registrarTrackingUsoInformes() {
 						const datos = {
 							"Batch": [{
 								"Entry": {
-									"Path": "/milestone/75650599817"
+									"Path": "/milestone/" + idHito
 									, "Method": "post"
 									, "Body": {
 										"milestone": {
