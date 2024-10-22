@@ -33,17 +33,17 @@ function registrarTrackingUsoInformes() {
 	}
 
 	// Obtener nombre, apellidos y username
-	if (window.parent.userFirstName && window.parent.userFirstName != null
-		&& window.parent.userLastName && window.parent.userLastName != null
-		&& window.parent.userName && window.parent.userName != null
-		&& window.parent.RALLY && window.parent.RALLY.context && window.parent.RALLY.context != null) {
+	if (window.parent.RALLY && window.parent.RALLY.context && window.parent.RALLY.context != null
+		&& window.parent.RALLY.context.user.FirstName && window.parent.RALLY.context.user.FirstName != null
+		&& window.parent.RALLY.context.user.LastName && window.parent.RALLY.context.user.LastName != null
+		&& window.parent.RALLY.context.user.UserName && window.parent.RALLY.context.user.UserName != null) {
 		var contexto = window.parent.getCurrentNavState();
 		if (contexto != null) {
 			var nombreEquipo = window.parent.RALLY.context.projectName;
 			var flagScopeUp = window.parent.RALLY.context.projectScopingUp;
 			var flagScopeDown = window.parent.RALLY.context.projectScopingDown;
 			var navegacion = contexto._navPath.path[2].name + " > " + contexto._navPath.path[3].name;
-			var usuario = window.parent.userFirstName + " " + window.parent.userLastName + " (" + window.parent.userName + ")";
+			var usuario = window.parent.RALLY.context.user.FirstName + " " + window.parent.RALLY.context.user.LastName + " (" + window.parent.RALLY.context.user.UserName + ")";
 			var fechaActual = new Date();
 			var fechaFormateadaActual =
 				fechaActual.getFullYear() + "-"
